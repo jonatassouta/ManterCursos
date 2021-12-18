@@ -1,0 +1,91 @@
+<h1 class="text-center">Categorias Cursos</h1>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  <i class="fas fa-plus-circle fa-3x" style="color: rgb(64, 179, 79);"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 800px; margin-left: -100px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Adicionar Curso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form  novalidate autocomplete="off" class="row g-3 form-curso" #form="ngForm" (submit)="onSubmitt(form)">
+
+          <input type="hidden" name="categoriaID" [value]="categoria.formData.categoriaID" />
+          <div class="col-md-4">
+            <label for="validationDefault01" class="form-label">Nome*</label>
+            <input type="text" #nome="ngModel"  name="descricaoCurso" class="form-control" id="validationDefault01" [(ngModel)]="categoria.formData.nome" required>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Cadastrar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Nome</th>
+    </tr>
+  </thead>
+    <tbody *ngFor="let cate of categoria.list">
+        <tr>
+          <td (click)="populateForm(cate)">{{cate.nome}}</td>
+          <td class="buttons">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInfo" (click)="pegarValores(cate.nome)"><i class="fas fa-search"></i></button>
+            <button class="btn btn-primary"  data-bs-toggle="modal"  data-bs-target="#exampleModal" (click)="populateForm(cate)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-danger" (click)="onDelete(cate.categoriaID)"><i class="fas fa-trash-alt"></i></button>
+          </td>
+        </tr>
+    </tbody>
+  <tfoot >
+    <tr *ngIf="categoria.list == null">
+      <td colspan="8">
+        <h4>Nenhuma categoria disponível</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- ----------------------------------------------------------------------------------------------------- -->
+
+<!-- Modal Informação -->
+<div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 800px; margin-left: -100px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Informações</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="img-cate">
+          <img src="" alt="img da categoria">
+        </div>
+
+        <div class="detalhes-cate">
+          <label for=""><b>Nome: </b>{{nome}}</label>
+        </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+      </div>
+    </div>
+  </div>
+</div>

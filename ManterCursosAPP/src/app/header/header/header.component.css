@@ -1,0 +1,41 @@
+ul a{
+  display: none;
+}
+
+.login {
+  border: 1px solid #664fad;
+  margin-left: 5px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.login:hover {
+  background-color: #664fad;
+}
+
+.login a{
+  text-decoration: none;
+  color: black;
+}
+
+input {
+  padding-left: 10px;
+  margin-right: 5px;
+  border-radius: 3px;
+  border: none;
+}
+
+@media screen and (max-width: 1350px){
+  ul a{
+    display: initial;
+  }
+
+  .procurar{
+    display: none;
+  }
+
+}
+
+@media screen and (min-width: 1000px){
+
+}

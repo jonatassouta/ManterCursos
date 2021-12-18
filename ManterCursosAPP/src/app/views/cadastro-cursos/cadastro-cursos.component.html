@@ -1,0 +1,143 @@
+<h1 class="text-center">Cursos Cast</h1>
+
+<!-- Button trigger modal -->
+<div class="row">
+  <div class="col-md-1">
+    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <i class="fas fa-plus-circle fa-3x" style="color: rgb(64, 179, 79);"></i>
+    </button>
+  </div>
+  <div class="col-md-3" style="width: 210px;">
+    <div>
+      <label for=""></label>
+      <input type="text" placeholder="Buscar" [(ngModel)]="curso.buscar">
+    </div>
+  </div>
+  <div class="col-md-4" style="display: flex; flex-direction: column; width: 300px;">
+    <div >
+      <label for="">Buscar Por Data Inicio ou Data Término</label>
+      <input type="date" [(ngModel)]="date">
+    </div>
+  </div>
+  <div class="col-md"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 800px; margin-left: -100px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Adicionar Curso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Inicio Forms -->
+
+        <form  class="needs-validation" novalidate autocomplete="off" class="row g-3 form-curso" #form="ngForm">
+
+          <input type="hidden" name="cursoID" [value]="curso.formData.cursoID"/>
+          <input type="hidden" name="logID" [value]="curso.formDataLog.logID" />
+          <div class="col-md-4">
+            <label for="validationDefault01" class="form-label">Descrição do Assunto*</label>
+            <input type="text" name="descricaoCurso" class="form-control" id="validationDefault01 "ng-model="descricaoCurso.value" [class.invalid]="descricaoCurso.invalid && descricaoCurso.touched"  #descricaoCurso="ngModel" [(ngModel)]="curso.formData.descricaoCurso" required min="">
+          </div>
+          <div class="col-md-4">
+            <label for="validationDefault02" class="form-label">Data de Inicio*</label>
+            <input type="date" name="dataInicio" min="{{dataAtual | date: 'yyyy-MM-dd'}}" class="form-control" id="validationDefault02" [class.invalid]="dataInicio.invalid && dataInicio.touched"  #dataInicio="ngModel" [(ngModel)]="curso.formData.dataInicio" required>
+          </div>
+          <div class="col-md-4">
+            <label for="validationDefaultUsername" class="form-label">Data de Término*</label>
+            <input type="date" name="datatermino" class="form-control" id="validationDefault02" [(ngModel)]="curso.formData.datatermino" [class.invalid]="datatermino.invalid && datatermino.touched"  #datatermino="ngModel" required min="{{curso.formData.dataInicio | date: 'yyyy-MM-dd'}}" *ngIf="curso.formData.dataInicio">
+          </div>
+          <div class="col-md-4">
+            <label for="" class="form-label">Quantidade de Alunos por Turma (opcional)</label>
+            <input type="number" name="quantidadeAlunos" class="form-control" [(ngModel)]="curso.formData.quantidadeAlunos" min="0">
+          </div>
+          <div class="col-md-3">
+            <br>
+            <label for="validationDefault04" class="form-label">Categoria*</label>
+            <select class="form-select" name="categoriaID"  id="validationDefault04" [class.invalid]="categoriaID.invalid && categoriaID.touched"  #categoriaID="ngModel"  [(ngModel)]="curso.formData.categoriaID" required>
+              <option *ngFor="let cate of categoria.list" value= {{cate.categoriaID}}>
+                {{cate.nome}}</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+            <button type="submit" class="btn btn-primary" (click)="validacaoFormulario(form, curso.formData.dataInicio, curso.formData.datatermino, curso.formData.descricaoCurso, curso.formData.categoriaID, curso.formData.quantidadeAlunos)">Cadastrar</button>
+          </div>
+
+        </form>
+
+        <!-- Fim Forms -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <button type="button" (click)="exibirValore()">TESTE</button> -->
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Descrição</th>
+      <th>Data Inicio</th>
+      <th>Data Termino</th>
+      <th>Quantidade Alunos</th>
+      <th>Categoria</th>
+      <th></th>
+    </tr>
+  </thead>
+    <tbody>
+        <tr *ngFor="let cursos of curso.list | filter: curso.buscar | filter: date; let i = index">
+          <td (click)="populateForm(cursos)">{{cursos.descricaoCurso}}</td>
+          <td (click)="populateForm(cursos)">{{cursos.dataInicio | date: 'dd/MM/yyyy'}}</td>
+          <td (click)="populateForm(cursos)">{{cursos.datatermino | date: 'dd/MM/yyyy'}}</td>
+          <td (click)="populateForm(cursos)">{{cursos.quantidadeAlunos}}</td>
+          <td (click)="populateForm(cursos)">{{getCategoria(cursos.categoriaID).nome}}</td>
+          <td class="buttons">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalVisualizacao"><i class="fas fa-search" (click)="pegarValores(cursos.descricaoCurso, cursos.dataInicio.toString(),  cursos.datatermino.toString(), cursos.quantidadeAlunos, cursos.categoriaID)"></i></button>
+            <button class="btn btn-primary" data-bs-toggle="modal"  data-bs-target="#exampleModal" (click)="populateForm(cursos)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-danger" *ngIf="dataCerta < cursos.datatermino.toString()" (click)="onDelete(cursos.cursoID)"><i class="fas fa-trash-alt"></i></button>
+          </td>
+    </tbody>
+  <tfoot >
+    <tr *ngIf="curso.list == null">
+      <td colspan="8">
+        <h4>Nenhum Curso Cadastrado</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="modalVisualizacao" tabindex="-1" aria-labelledby="modalVisualizacao" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width: 800px; margin-left: -100px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Informações</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="img">
+          <img src="../../../assets/img/Cursos/c#.png" alt="img-do-curso">
+        </div>
+        <div class="detalhes" >
+          <div class="informacao">
+            <p><b>Descrição: </b>{{descricao}}</p>
+            <p><b>Data Inicio: </b>{{datainicio | date: 'dd/MM/yyyy'}}</p>
+            <p><b>Data Término: </b>{{dataTermino | date: 'dd/MM/yyyy'}}</p>
+            <p><b>Quantidade de Alunos: </b>{{quantidadeAlunos}}</p>
+            <p><b>Categoria do Curso: </b>{{nomeCate}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+      </div>
+    </div>
+  </div>
+</div>
